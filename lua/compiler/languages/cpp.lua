@@ -21,7 +21,7 @@ function M.action(selected_option)
   local arguments = "-Wall -g -O3"                                    -- arguments can be overriden in .solution
   local final_message = "--task finished--"
 
-  local current_file = string.format("%f")
+  local current_file = "%f"
   local output_file_pattern = current_file:match("(.*%p)")
   local output_file = output_file_pattern:gsub("%.", "")
 
