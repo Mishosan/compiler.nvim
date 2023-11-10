@@ -14,6 +14,7 @@ M.options = {
 function M.action(selected_option)
   local utils = require("compiler.utils")
   local overseer = require("overseer")
+  local current_file = string.format('find "%s" -type f -name "%s')
   local entry_point = utils.os_path(vim.fn.getcwd() .. "%f")          -- working_directory/<current file>.cpp
   local files = utils.find_files_to_compile(entry_point, "*.cpp")     -- *.cpp files under entry_point_dir (recursively)
   local output_dir = utils.os_path(vim.fn.getcwd())                   -- working_directory/bin/
@@ -21,7 +22,6 @@ function M.action(selected_option)
   local arguments = "-Wall -g -O3"                                    -- arguments can be overriden in .solution
   local final_message = "--task finished--"
 
-  local current_file = "%f"
   local output_file_pattern = current_file:match("(.*%p)")
   local output_file = output_file_pattern:gsub("%.", "")
 
