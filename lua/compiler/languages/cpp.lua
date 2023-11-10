@@ -14,24 +14,25 @@ M.options = {
 function M.action(selected_option)
   local utils = require("compiler.utils")
   local overseer = require("overseer")
-  local entry_point = utils.os_path(vim.fn.getcwd() .. "/main.cpp")          -- working_directory/main.cpp
-  local files = utils.find_files_to_compile(entry_point, "*.cpp")            -- *.cpp files under entry_point_dir (recursively)
-  local output_dir = utils.os_path(vim.fn.getcwd() .. "/bin/")               -- working_directory/bin/
-  local output = utils.os_path(vim.fn.getcwd() .. "/bin/program")            -- working_directory/bin/program
-  local arguments = "-Wall -g"                                               -- arguments can be overriden in .solution
+  local entry_point = utils.os_path(vim.fn.getcwd() .. "%f")          -- working_directory/<current file>.cpp
+  local files = utils.find_files_to_compile(entry_point, "*.cpp")     -- *.cpp files under entry_point_dir (recursively)
+  local output_dir = utils.os_path(vim.fn.getcwd())                   -- working_directory/bin/
+  local output = utils.os_path(vim.fn.getcwd())                       -- working_directory/bin/program
+  local arguments = "-Wall -g -O3"                                    -- arguments can be overriden in .solution
   local final_message = "--task finished--"
+
+  local current_file = string.format("%f")
+  local output_file_pattern = current_file:match("(.*%p)")
+  local output_file = output_file_pattern:gsub("%.", "")
 
   if selected_option == "option1" then
     local task = overseer.new_task({
       name = "- C++ compiler",
       strategy = { "orchestrator",
-        tasks = {{ "shell", name = "- Build & run program → " .. entry_point,
-          cmd = "rm -f " .. output .. " || true" ..                                   -- clean
-                " && mkdir -p " .. output_dir ..                                      -- mkdir
-                " && g++ " .. files .. " -o " .. output .. " " .. arguments ..        -- compile
-                " && " .. output ..                                                   -- run
-                " && echo " .. entry_point ..                                         -- echo
-                " && echo '" .. final_message .. "'"
+        tasks = {{ "shell", name = "- Build & run program → " .. current_file,
+          cmd = "g++ " .. arguments .. current_file .. " -o " .. "%f"
+                .. " && ./" .. output_file ..
+                " && echo " .. entry_point .. " && echo '" .. final_message .. "'"
         },},},})
     task:start()
     vim.cmd("OverseerOpen")

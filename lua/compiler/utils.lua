@@ -95,7 +95,7 @@ end
 -- If ./languages/<filetype>.lua doesn't exist, return nil.
 function M.require_language(filetype)
   local local_path = debug.getinfo(1, "S").source:sub(2)
-  local local_path_dir = local_path:match("(.*[/\\])")
+  local local_path_dir = local_path:match("(.*[/\\ ])")
   local module_file_path = M.os_path(local_path_dir .. "languages/" .. filetype .. ".lua")
   local success, language = pcall(dofile, module_file_path)
 
