@@ -14,7 +14,11 @@ M.options = {
 function M.action(selected_option)
   local utils = require("compiler.utils")
   local overseer = require("overseer")
-  local current_file = string.format('find "%s" -type f -name "%s')
+
+  local file_name = vim.fn.expand("%:h")
+  local file_ending = vim.bo.filetype
+  local current_file = string.format("%s" .. ".%s", file_name, file_ending)
+
   local entry_point = utils.os_path(vim.fn.getcwd() .. "/" .. current_file)          -- working_directory/<current file>.cpp
   local files = utils.find_files_to_compile(entry_point, "*.cpp")     -- *.cpp files under entry_point_dir (recursively)
   local output_dir = utils.os_path(vim.fn.getcwd())                   -- working_directory/bin/
@@ -22,8 +26,8 @@ function M.action(selected_option)
   local arguments = "-Wall -g -O3"                                    -- arguments can be overriden in .solution
   local final_message = "--task finished--"
 
-  local output_file_pattern = current_file:match("(.*%p)")
-  local output_file = output_file_pattern:gsub("%.", "")
+  -- local output_file_pattern = current_file:match("(.*%p)")
+  -- local output_file = output_file_pattern:gsub("%.", "")
 
   if selected_option == "option1" then
     local task = overseer.new_task({
@@ -31,7 +35,7 @@ function M.action(selected_option)
       strategy = { "orchestrator",
         tasks = {{ "shell", name = "- Build & run program → " .. current_file,
           cmd = "g++ " .. arguments .. current_file .. " -o " .. "%f"
-                .. " && ./" .. output_file ..
+                .. " && ./" .. file_name ..
                 " && echo " .. entry_point .. " && echo '" .. final_message .. "'"
         },},},})
     task:start()
