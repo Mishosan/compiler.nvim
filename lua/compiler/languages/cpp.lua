@@ -41,7 +41,7 @@ function M.action(selected_option)
       name = "- C++ compiler",
       strategy = { "orchestrator",
         tasks = {{ "shell", name = "- Build program → " .. current_file,
-          cmd = " && g++ " .. arguments .. " " .. current_file .. " -o " .. file_name
+          cmd = "g++ " .. arguments .. " " .. current_file .. " -o " .. file_name
                 .. " " .. " && echo " .. entry_point ..                                         -- echo
                 " && echo '" .. final_message .. "'"
         },},},})
@@ -52,7 +52,7 @@ function M.action(selected_option)
       name = "- C++ compiler",
       strategy = { "orchestrator",
         tasks = {{ "shell", name = "- Run program → " .. file_name,
-          cmd = output ..                                                            -- run
+          cmd = "./" .. file_name ..                                                            -- run
                 " && echo " .. output ..                                             -- echo
                 " && echo '" .. final_message .. "'"
         },},},})
