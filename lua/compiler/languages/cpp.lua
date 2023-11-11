@@ -34,7 +34,7 @@ function M.action(selected_option)
       name = "- C++ compiler",
       strategy = { "orchestrator",
         tasks = {{ "shell", name = "- Build & run program → " .. current_file,
-          cmd = "g++ " .. arguments .. current_file .. " -o " .. "%f"
+          cmd = "g++ " .. arguments .. " " .. current_file .. " -o " .. "%f"
                 .. " && ./" .. file_name ..
                 " && echo " .. entry_point .. " && echo '" .. final_message .. "'"
         },},},})
