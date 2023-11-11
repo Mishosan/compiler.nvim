@@ -81,10 +81,11 @@ function M.action(selected_option)
       strategy = { "orchestrator",
         tasks = {{ "shell", name = "- Cargo clippy --fix --allow-dirty → " .. "Cargo.toml",
           cmd = "cargo clippy --fix --allow-dirty " ..
-                " && echo '" .. final_message .. "'" .. ":e"
+                " && echo '" .. final_message .. "'"
         },},},})
     task:start()
     vim.cmd("OverseerOpen")
+    vim.cmd(":e")
   end
 end
 
