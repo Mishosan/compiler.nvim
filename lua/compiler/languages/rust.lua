@@ -85,12 +85,7 @@ function M.action(selected_option)
         },},},})
     task:start()
     vim.cmd("OverseerOpen")
-    vim.cmd([[
-    augroup rungroup
-        autocmd!
-        autocmd BufRead,BufNewFile *.rust :exec '!:e' shellescape(@%, 1)<cr>
-    augroup END
-    ]])
+    vim.cmd(":e %f")
   end
 end
 
