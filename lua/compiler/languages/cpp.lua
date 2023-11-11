@@ -16,7 +16,6 @@ function M.action(selected_option)
   local overseer = require("overseer")
 
   local file_name = vim.fn.expand("%:e")
-  -- local file_ending = vim.bo.filetype
   local current_file = vim.fn.expand("%:t")
 
   local entry_point = utils.os_path(vim.fn.getcwd() .. "/" .. current_file)          -- working_directory/<current file>.cpp
@@ -25,9 +24,6 @@ function M.action(selected_option)
   local output = utils.os_path(vim.fn.getcwd())                       -- working_directory/bin/program
   local arguments = "-Wall -g -O3"                                    -- arguments can be overriden in .solution
   local final_message = "--task finished--"
-
-  -- local output_file_pattern = current_file:match("(.*%p)")
-  -- local output_file = output_file_pattern:gsub("%.", "")
 
   if selected_option == "option1" then
     local task = overseer.new_task({
