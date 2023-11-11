@@ -15,9 +15,9 @@ function M.action(selected_option)
   local utils = require("compiler.utils")
   local overseer = require("overseer")
 
-  local file_name = vim.fn.expand("%:h")
-  local file_ending = vim.bo.filetype
-  local current_file = string.format("%s" .. ".%s", file_name, file_ending)
+  local file_name = vim.fn.expand("%:e")
+  -- local file_ending = vim.bo.filetype
+  local current_file = vim.fn.expand("%:t")
 
   local entry_point = utils.os_path(vim.fn.getcwd() .. "/" .. current_file)          -- working_directory/<current file>.cpp
   local files = utils.find_files_to_compile(entry_point, "*.cpp")     -- *.cpp files under entry_point_dir (recursively)
