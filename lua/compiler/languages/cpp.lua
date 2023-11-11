@@ -21,7 +21,7 @@ function M.action(selected_option)
   local entry_point = utils.os_path(vim.fn.getcwd() .. "/" .. current_file)          -- working_directory/<current file>.cpp
   local files = utils.find_files_to_compile(entry_point, "*.cpp")     -- *.cpp files under entry_point_dir (recursively)
   local output_dir = utils.os_path(vim.fn.getcwd())                   -- working_directory/bin/
-  local output = utils.os_path(vim.fn.getcwd())                       -- working_directory/bin/program
+  local output = utils.os_path(output_dir .. "/" .. file_name)                       -- working_directory/bin/program
   local arguments = "-Wall -g -O3"                                    -- arguments can be overriden in .solution
   local final_message = "--task finished--"
 
@@ -40,11 +40,9 @@ function M.action(selected_option)
     local task = overseer.new_task({
       name = "- C++ compiler",
       strategy = { "orchestrator",
-        tasks = {{ "shell", name = "- Build program → " .. entry_point,
-          cmd = "rm -f " .. output ..  " || true" ..                                  -- clean
-                " && mkdir -p " .. output_dir ..                                      -- mkdir
-                " && g++ " .. files .. " -o " .. output .. " " .. arguments ..        -- compile
-                " && echo " .. entry_point ..                                         -- echo
+        tasks = {{ "shell", name = "- Build program → " .. current_file,
+          cmd = " && g++ " .. arguments .. " " .. current_file .. " -o " .. file_name
+                .. " " .. " && echo " .. entry_point ..                                         -- echo
                 " && echo '" .. final_message .. "'"
         },},},})
     task:start()
@@ -53,7 +51,7 @@ function M.action(selected_option)
     local task = overseer.new_task({
       name = "- C++ compiler",
       strategy = { "orchestrator",
-        tasks = {{ "shell", name = "- Run program → " .. output,
+        tasks = {{ "shell", name = "- Run program → " .. file_name,
           cmd = output ..                                                            -- run
                 " && echo " .. output ..                                             -- echo
                 " && echo '" .. final_message .. "'"
