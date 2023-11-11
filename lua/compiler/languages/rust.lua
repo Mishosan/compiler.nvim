@@ -85,7 +85,7 @@ function M.action(selected_option)
         },},},})
     task:start()
     vim.cmd("OverseerOpen")
-    vim.cmd(":e %:t")
+    -- vim.cmd(":e %:t")
   end
 end
 
