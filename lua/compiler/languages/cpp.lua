@@ -35,7 +35,7 @@ function M.action(selected_option)
       strategy = { "orchestrator",
         tasks = {{ "shell", name = "- Build & run program → " .. current_file,
           cmd = "g++ " .. arguments .. " " .. current_file .. " -o " .. "%f"
-                .. " && ./" .. file_name ..
+                .. " && ./" .. current_file ..
                 " && echo " .. entry_point .. " && echo '" .. final_message .. "'"
         },},},})
     task:start()
