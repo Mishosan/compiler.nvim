@@ -29,7 +29,8 @@ M.options = {
 function M.action(selected_option)
   local utils = require("compiler.utils")
   local overseer = require("overseer")
-  local current_file = vim.fn.expand('%:p')                                  -- current file
+  -- local current_file = vim.fn.expand('%:p')                                  -- current file
+  local current_file = vim.fn.expand("%:t")
   local working_directory = vim.fn.getcwd()
   local entry_point = utils.os_path(working_directory .. "/" .. current_file)           -- working_directory/main.py
   local files = utils.find_files_to_compile(entry_point, "*.py")             -- *.py files under entry_point_dir (recursively)
