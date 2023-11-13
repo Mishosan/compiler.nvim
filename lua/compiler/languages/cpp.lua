@@ -35,7 +35,7 @@ function M.action(selected_option)
         tasks = {{ "shell", name = "- Build & run program → " .. current_file,
           cmd = "g++ " .. arguments .. " " .. current_file .. " -o " .. output_file
                 .. " && ./" .. output_file ..
-                " && echo '\n\n' && echo " .. entry_point .. " && echo '" .. final_message .. "'"
+                " && echo " .. entry_point .. " && echo '" .. final_message .. "'"
         },},},})
     task:start()
     vim.cmd("OverseerOpen")
@@ -56,7 +56,7 @@ function M.action(selected_option)
       strategy = { "orchestrator",
         tasks = {{ "shell", name = "- Run program → " .. output_file,
           cmd = "./" .. output_file ..                                                            -- run
-                " && echo '\n\n' && echo " .. output ..                                             -- echo
+                " && echo " .. output ..                                             -- echo
                 " && echo '" .. final_message .. "'"
         },},},})
     task:start()
