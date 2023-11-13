@@ -15,13 +15,16 @@ function M.action(selected_option)
   local utils = require("compiler.utils")
   local overseer = require("overseer")
 
-  local file_name = vim.fn.expand("%:e")
+  -- local output_file = vim.fn.expand("%:e")
   local current_file = vim.fn.expand("%:t")
+
+  local output_file_pattern = current_file:match("(.*%p)")
+  local output_file = output_file_pattern:gsub("%.", "")
 
   local entry_point = utils.os_path(vim.fn.getcwd() .. "/" .. current_file)          -- working_directory/<current file>.cpp
   local files = utils.find_files_to_compile(entry_point, "*.cpp")     -- *.cpp files under entry_point_dir (recursively)
-  local output_dir = utils.os_path(vim.fn.getcwd())                   -- working_directory/bin/
-  local output = utils.os_path(output_dir .. "/" .. file_name)                       -- working_directory/bin/program
+  local output_dir = utils.os_path(vim.fn.getcwd())                   -- working_directory/
+  local output = utils.os_path(output_dir .. "/" .. output_file)                       -- working_directory/
   local arguments = "-Wall -g -O3"                                    -- arguments can be overriden in .solution
   local final_message = "--task finished--"
 
@@ -30,8 +33,8 @@ function M.action(selected_option)
       name = "- C++ compiler",
       strategy = { "orchestrator",
         tasks = {{ "shell", name = "- Build & run program → " .. current_file,
-          cmd = "g++ " .. arguments .. " " .. current_file .. " -o " .. file_name
-                .. " && ./" .. file_name ..
+          cmd = "g++ " .. arguments .. " " .. current_file .. " -o " .. output_file
+                .. " && ./" .. output_file ..
                 " && echo " .. entry_point .. " && echo '" .. final_message .. "'"
         },},},})
     task:start()
@@ -41,7 +44,7 @@ function M.action(selected_option)
       name = "- C++ compiler",
       strategy = { "orchestrator",
         tasks = {{ "shell", name = "- Build program → " .. current_file,
-          cmd = "g++ " .. arguments .. " " .. current_file .. " -o " .. file_name
+          cmd = "g++ " .. arguments .. " " .. current_file .. " -o " .. output_file
                 .. " " .. " && echo " .. entry_point ..                                         -- echo
                 " && echo '" .. final_message .. "'"
         },},},})
@@ -51,8 +54,8 @@ function M.action(selected_option)
     local task = overseer.new_task({
       name = "- C++ compiler",
       strategy = { "orchestrator",
-        tasks = {{ "shell", name = "- Run program → " .. file_name,
-          cmd = "./" .. file_name ..                                                            -- run
+        tasks = {{ "shell", name = "- Run program → " .. output_file,
+          cmd = "./" .. output_file ..                                                            -- run
                 " && echo " .. output ..                                             -- echo
                 " && echo '" .. final_message .. "'"
         },},},})
