@@ -163,6 +163,7 @@ If any of these files exist in your current working directory, they will be auto
 |--|--|
 | [Makefile](https://github.com/Zeioth/compiler.nvim/blob/main/lua/compiler/bau/make.lua)| [+info](https://github.com/Zeioth/Compiler.nvim/wiki/Makefile-build-automation-utility) | 
 | [CMakeLists.txt](https://github.com/Zeioth/compiler.nvim/blob/main/lua/compiler/bau/cmake.lua) | [+info](https://github.com/Zeioth/Compiler.nvim/wiki/CMake-build-automation-utility) |
+| [build.gradle](https://github.com/Zeioth/compiler.nvim/blob/main/lua/compiler/bau/gradle.lua) | [+info](https://github.com/Zeioth/Compiler.nvim/wiki/gradle-build-automation-utility) |
 
 ## Quick start
 Create `~/c-example/main.c` and paste this code. Then do `:cd ~/c-example/` to change the working directory to the project.
@@ -218,8 +219,7 @@ If you want to help me, please star this repository to increase the visibility o
 </a>
 
 ## Roadmap
-* `Improvement`: We currently display Flutter compiling options when using Dart. We also show Android studio compiling options when using Kotlin, but we are not doing the same thing for java. → In fact we should add all of this as building system system (gradle), instead of adding it as part of the language compiler options. That would allow us to display these options only when present in the Android gradle config file.
-* `Building systems → gradle` is planned. Auto discovery of options defined by the user is planned.
+* `Improvement`: We currently display Flutter compiling options when using Dart. We also show Android studio compiling options when using Kotlin, but we are not doing the same thing for java. → In fact we should add all of this as building system system (gradle), instead of adding it as part of the language compiler options. That would allow us to display these options only when present in the Android build.gradle.
 * `Building systems → maven` is planned. Auto discovery of options defined by the user is planned.
 * `Building systems → package.json` is planned. Auto discovery of options defined by the user is planned.
 * Consider adding rake support.
