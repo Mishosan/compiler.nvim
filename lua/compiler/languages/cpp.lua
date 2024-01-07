@@ -17,13 +17,13 @@ function M.action(selected_option)
 
   -- local output_file = vim.fn.expand("%:e")
   local current_file = vim.fn.expand("%:t")
-
+  local current_dir = vim.fn.getcwd()
   local output_file_pattern = current_file:match("(.*%p)")
   local output_file = output_file_pattern:gsub("%.", "")
 
-  local entry_point = utils.os_path(vim.fn.getcwd() .. "/" .. current_file)          -- working_directory/<current file>.cpp
+  local entry_point = utils.os_path(current_dir .. "/" .. current_file)          -- working_directory/<current file>.cpp
   local files = utils.find_files_to_compile(entry_point, "*.cpp")     -- *.cpp files under entry_point_dir (recursively)
-  local output_dir = utils.os_path(vim.fn.getcwd())                   -- working_directory/
+  local output_dir = utils.os_path(current_dir)                   -- working_directory/
   local output = utils.os_path(output_dir .. "/" .. output_file)                       -- working_directory/
   local arguments = "-Wall -g -O3"                                    -- arguments can be overriden in .solution
   local final_message = "--task finished--"

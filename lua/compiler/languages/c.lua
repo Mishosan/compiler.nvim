@@ -14,11 +14,17 @@ M.options = {
 function M.action(selected_option)
   local utils = require("compiler.utils")
   local overseer = require("overseer")
-  local entry_point = utils.os_path(vim.fn.getcwd() .. "/main.c")            -- working_directory/main.c
+
+  local current_file = vim.fn.expand("%:t")
+  local current_dir = vim.fn.getcwd()
+  local output_file_pattern = current_file:match("(.*%p)")
+  local output_file = output_file_pattern:gsub("%.", "")
+
+  local entry_point = utils.os_path(current_dir .. "/" .. current_file)            -- working_directory/main.c
   local files = utils.find_files_to_compile(entry_point, "*.c")              -- *.c files under entry_point_dir (recursively)
-  local output_dir = utils.os_path(vim.fn.getcwd() .. "/bin/")               -- working_directory/bin/
-  local output = utils.os_path(vim.fn.getcwd() .. "/bin/program")            -- working_directory/bin/program
-  local arguments = "-Wall -g"                                               -- arguments can be overriden in .solution
+  local output_dir = utils.os_path(current_dir)
+  local output = utils.os_path(output_dir .. "/" .. output_file)                       -- working_directory/
+  local arguments = "-Wall -g -O3"                                               -- arguments can be overriden in .solution
   local final_message = "--task finished--"
 
 
@@ -26,13 +32,10 @@ function M.action(selected_option)
     local task = overseer.new_task({
       name = "- C compiler",
       strategy = { "orchestrator",
-        tasks = {{ "shell", name = "- Build & run program → " .. entry_point,
-          cmd = "rm -f " .. output ..  " || true" ..                                 -- clean
-                " && mkdir -p " .. output_dir ..                                     -- mkdir
-                " && gcc " .. files .. " -o " .. output .. " " .. arguments ..       -- compile
-                " && " .. output ..                                                  -- run
-                " && echo " .. entry_point ..                                        -- echo
-                " && echo '" .. final_message .. "'"
+        tasks = {{ "shell", name = "- Build & run program → " .. current_file,
+          cmd = "gcc " .. arguments .. " " .. current_file .. " -o " .. output_file
+                .. " && ./" .. output_file ..
+                " && echo " .. entry_point .. " && echo '" .. final_message .. "'"
         },},},})
     task:start()
     vim.cmd("OverseerOpen")
@@ -40,11 +43,9 @@ function M.action(selected_option)
     local task = overseer.new_task({
       name = "- C compiler",
       strategy = { "orchestrator",
-        tasks = {{ "shell", name = "- Build program → " .. entry_point,
-          cmd = "rm -f " .. output ..  " || true" ..                                 -- clean
-                " && mkdir -p " .. output_dir ..                                     -- mkdir
-                " && gcc " .. files .. " -o " .. output .. " " .. arguments ..       -- compile
-                " && echo " .. entry_point ..                                        -- echo
+        tasks = {{ "shell", name = "- Build program → " .. current_file,
+          cmd = "gcc " .. arguments .. " " .. current_file .. " -o " .. output_file
+                .. " " .. " && echo " .. entry_point ..                                         -- echo
                 " && echo '" .. final_message .. "'"
         },},},})
     task:start()
@@ -53,8 +54,8 @@ function M.action(selected_option)
     local task = overseer.new_task({
       name = "- C compiler",
       strategy = { "orchestrator",
-        tasks = {{ "shell", name = "- Run program → " .. output,
-          cmd = output ..                                                            -- run
+        tasks = {{ "shell", name = "- Run program → " .. output_file,
+          cmd = "./" .. output_file ..                                                            -- run
                 " && echo " .. output ..                                             -- echo
                 " && echo '" .. final_message .. "'"
         },},},})
